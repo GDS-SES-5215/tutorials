@@ -1,0 +1,157 @@
+---
+title: "Week 2: Distributions and proportions"
+author: "Carole Voulgaris"
+date: "9/10/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time.
+
+```{r load libraries}
+library(tidycensus)
+library(tidyverse)
+library(ggplot2)
+```
+
+Let's start by loading the person-level dataset we created last week.
+
+`read_csv()` loads the data into our environment and `attach` basically activates it so that when we refer to one of the variable in that dataframe, it knows which dataframe to look for it in.
+
+```{r load data}
+person_data <- read_csv("people.csv")
+attach(person_data)
+```
+
+## Distribution of a continuous variable
+Let's start by looking at the distribution of the amount of time (in minutes) people spend traveling to work. The `summary()` function can quickly give us some summary 
+
+```{r quick summary statistics}
+summary(JWMNP)
+```
+
+I can also use the functions `mean()` and `quantile()` to get these pieces separately. We can also use `sd()` to get the sample standard deviation, which isn't included in the output of the `summary()` function.
+
+```{r individual summary statistics}
+paste("The sample mean for the travel time to work is",
+      prettyNum(mean(JWMNP), digits = 0), "minutes.")
+paste("The sample median for the travel time to work is",
+      prettyNum(median(JWMNP), digits = 0), "minutes.")
+paste("The sample standard deviation for the travel time to work is",
+      prettyNum(sd(JWMNP), digits = 0), "minutes.")
+paste("The sample interquartile range for the travel time to work is",
+      quantile(JWMNP)["25%"], "to", quantile(JWMNP)["75%"], "minutes.")
+```
+
+All of the above are characteristics of the sample. We can use t.test() to get a 95-percent confidence interval for the population mean.
+
+```{r population mean}
+pop_mean <- t.test(JWMNP)
+
+pop_mean
+
+paste("The 95-percent confidence interval for the population mean is",
+      prettyNum(pop_mean$conf.int[1], digits = 0), "to",
+      prettyNum(pop_mean$conf.int[2], digits = 0), "minutes.")
+```
+
+We can get a quick look at that distribution by creating a histogram. We'll use the ggplot2 package for all our graphics. I'll save the graph to an object called `hist`, so I can add to it a little bit later.
+
+```{r create histogram}
+hist <- ggplot(person_data, aes(x = JWMNP)) +
+  geom_histogram() 
+
+hist
+```
+
+Let's pretty up that histogram a little, and display the summary statistics we just calculated right on the figure.
+
+```{r better histogram}
+
+hist + 
+  theme_bw() +
+  scale_x_continuous(name = "Travel time to work (minutes)") +
+  scale_y_continuous(name = "Number of people in sample") +
+  annotate("text", x = 50, y = 22500, size = 3, 
+           label = paste("Population mean (95% confidence):",
+                         prettyNum(pop_mean$conf.int[1], digits = 0),
+                         "to",
+                         prettyNum(pop_mean$conf.int[2], digits = 0),
+                         "minutes.",
+                         "\nSample mean:", 
+                         prettyNum(mean(JWMNP), digits = 0), "minutes.",
+                         "\nSample median:",
+                         prettyNum(median(JWMNP), digits = 0), "minutes.",
+                         "\nSample standard deviation:",
+                         prettyNum(sd(JWMNP), digits = 0), "minutes.", 
+                         "\nSample interquartile range:",
+                         prettyNum(quantile(JWMNP)["25%"], digits = 0),
+                         "to",
+                         prettyNum(quantile(JWMNP)["75%"], digits = 0),
+                         "minutes."),
+           hjust = 0, vjust = 1) 
+```
+
+## Distribution of a categorical variable
+
+The distribution of a categorical variable can be decribed in terms of the proportion of the sample or population that falls in each category. Let's take a look at the housing tenure variable (`TEN_label`).
+
+First, we can get a list of all the possible values
+
+```{r tenure categories}
+tenures <- unique(TEN_label)
+
+tenures
+```
+
+Now let's get the share of the sample in each category.
+
+``` {r}
+group_quarters <- t.test(TEN_label == tenures[1])
+owned_free <- t.test(TEN_label == tenures[2])
+mortgage <- t.test(TEN_label == tenures[3])
+rented <-  t.test(TEN_label == tenures[4])
+rent_free <-  t.test(TEN_label == tenures[5])
+
+shares <- tibble(Tenure = c("Group Quarters", 
+                            "Owned\nfree and clear", 
+                            "Owned\nwith mortgage",
+                            "Rented",
+                            "Occupied\nrent-free"),
+                 `Share` = c(group_quarters$estimate, 
+                             owned_free$estimate,
+                             mortgage$estimate,
+                             rented$estimate,
+                             rent_free$estimate),
+                 Low = c(group_quarters$conf.int[1],
+                         owned_free$conf.int[1],
+                         mortgage$conf.int[1],
+                         rented$conf.int[1],
+                         rent_free$conf.int[1]),
+                 High = c(group_quarters$conf.int[2],
+                         owned_free$conf.int[2],
+                         mortgage$conf.int[2],
+                         rented$conf.int[2],
+                         rent_free$conf.int[2]))
+shares
+```
+
+Now that we've calculated the confidence intervals for those proportions, and organized them into a dataframe, we can illustrate those results with a bar chart.
+
+``` {r bar chart}
+ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(width = 0.5) +
+  theme_bw() +
+  scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
+                     breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+                     labels = c("0", "10%", "20%", "30%", "40%", "50%"))
+```
