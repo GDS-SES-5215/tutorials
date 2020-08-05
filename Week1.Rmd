@@ -193,8 +193,10 @@ counties
 
 ## Saving data
 
-You can save any of the datasets you just created for future use by writing them to a csv file. For example, you might decide to save the person-level data.
+You can save any of the datasets you just created for future use by writing them to a csv file. 
 
 ``` {r save dataframes as csv}
 write_csv(person_data, "people.csv")
+write_csv(hh_data, "households.csv")
+write_csv(counties, "counties.csv")
 ```
