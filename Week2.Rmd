@@ -24,7 +24,7 @@ library(ggplot2)
 
 Let's start by loading the person-level dataset we created last week.
 
-`read_csv()` loads the data into our environment and `attach` basically activates it so that when we refer to one of the variable in that dataframe, it knows which dataframe to look for it in.
+`read_csv()` loads the data into our environment and `attach()` basically activates it so that when we refer to one of the variables in that dataframe, R knows which dataframe to look for it in.
 
 ```{r load data}
 person_data <- read_csv("people.csv")
