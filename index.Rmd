@@ -19,3 +19,7 @@ For each week's assignment, I've posted (or will have posted) a video tutorial a
 ## Week 2: Distributions and proportions
 
 [Written tutorial](https://gds-ses-5215.github.io/tutorials/Week2)
+
+## Week 3: Relationships
+
+[Written tutorial](https://gds-ses-5215.github.io/tutorials/Week3)

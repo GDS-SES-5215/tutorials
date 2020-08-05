@@ -137,7 +137,7 @@ as_tibble(cbind(pair = row.names(differences$struct_type),
                 differences$struct_type))
 ```
 
-Again, you could visulize those differences with a violin plot. Just for the sake of variety though, let's do a box plot though.
+Again, you could visulize those differences with a violin plot. Just for the sake of variety though, let's do a box plot.
 
 ``` {r building type violin}
 ggplot(hh_data, aes(x = struct_type, y = GRNTP)) +
