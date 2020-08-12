@@ -1536,7 +1536,9 @@ div.tocify {
 
 <p>The tidycensus package offers a really convenient way to download data collected by the United States Census Bureau directly into your R environment. The most recent update to tidycensus allows you to access microdata (e.g. data at the person and household levels) in addition to area-level data (census tracts, counties, cities, etc).</p>
 <p>You can read more about tidycensus here: <a href="https://walker-data.com/tidycensus/" class="uri">https://walker-data.com/tidycensus/</a></p>
-<p>Before you start, you’ll need to make sure the following packages are installed:</p>
+<p>We’ll be using a pre-release (development) version of tidycensus, so you’ll need to install it by running the following code in your console (no need to save it in your Rmarkdown file since you’ll only need to ever do this once):</p>
+<p><code>remotes::install_github(&quot;walkerke/tidycensus&quot;)</code></p>
+<p>Once you’ve done that, load the following libraries:</p>
 <pre class="r"><code>library(tidycensus)
 library(tidyverse)</code></pre>
 <p>You will also need to obtain a census api key from <a href="http://api.census.gov/data/key_signup.html" class="uri">http://api.census.gov/data/key_signup.html</a> and install it on your computer by typing <code>census_api_key(&quot;YOUR API KEY GOES HERE&quot;, install=TRUE)</code> into your console. You only need to install libraries and your API key once, but you’ll need to load the libraries every time you run your code.</p>
@@ -1715,7 +1717,8 @@ counties</code></pre>
 <h2>Saving data</h2>
 <p>You can save any of the datasets you just created for future use by writing them to a csv file.</p>
 <pre class="r"><code>write_csv(person_data, &quot;people.csv&quot;)
-write_csv(hh_data, &quot;households.csv&quot;)</code></pre>
+write_csv(hh_data, &quot;households.csv&quot;)
+write_csv(counties, &quot;counties.csv&quot;)</code></pre>
 </div>
 
 

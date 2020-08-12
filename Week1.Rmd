@@ -18,7 +18,11 @@ The tidycensus package offers a really convenient way to download data collected
 
 You can read more about tidycensus here: https://walker-data.com/tidycensus/
 
-Before you start, you'll need to make sure the following packages are installed:
+We'll be using a pre-release (development) version of tidycensus, so you'll need to install it by running the following code in your console (no need to save it in your Rmarkdown file since you'll only need to ever do this once):
+
+`remotes::install_github("walkerke/tidycensus")`
+
+Once you've done that, load the following libraries:
 
 ```{r load libraries}
 library(tidycensus)
