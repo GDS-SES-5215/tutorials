@@ -16,12 +16,12 @@ For each week's assignment, I've posted (or will have posted) one or more video 
 
 [Video tutorial 1: Starting an R project from a GitHub repo](https://harvard.zoom.us/rec/play/6ZZ8f-ypqzs3G9DHtwSDBvN-W42_Kv2s1iEe-PZfz0u2BnYHMAKnbrUTMOFMF5vL7wloYpfsmqy2CQhB?startTime=1597255620000){target="_blank"}
 
-[Written tutorial](https://gds-ses-5215.github.io/tutorials/Week1){target="_blank"}
+[Written tutorial](https://ses-5215-f2020.github.io/tutorials/Week1){target="_blank"}
 
 ## Week 2: Distributions and proportions
 
-[Written tutorial](https://gds-ses-5215.github.io/tutorials/Week2){target="_blank"}
+[Written tutorial](https://ses-5215-f2020.github.io/tutorials/Week2){target="_blank"}
 
 ## Week 3: Relationships
 
-[Written tutorial](https://gds-ses-5215.github.io/tutorials/Week3)
+[Written tutorial](https://ses-5215-f2020.github.io/tutorials/Week3)
