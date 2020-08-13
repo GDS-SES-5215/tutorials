@@ -109,6 +109,8 @@ The method for getting household-level data is the same. You just need to make s
 4. Units in structure (BLD) (categorical)
 5. Limited English-speaking household (LNGI) (categorical)
 
+As I download the data, I also want to convert the categorical variable indicating the age of the home (which gives ranges of years) to a continuous variable. I recommend looking through the [Data Wrangling Cheat Sheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf){target="_blank"} for an overview of many of the functions that are available for reshaping and otherwise modifying a dataframe using the tools available in the tidyverse package. So far, we've used `filter()`, `select()`, and `distinct()`. In the code below, I also use `mutate()` to create a new (continuous) variable from an existing (categorical) variable.
+
 ``` {r load household-level data, results = 'hide'}
 hh_data <- get_pums(variables = c("TEN", 
                                   "YBL", 
@@ -197,7 +199,7 @@ counties
 
 ## Saving data
 
-You can save any of the datasets you just created for future use by writing them to a csv file. 
+You can save any of the datasets you just created for future use by writing them to a *.csv file. 
 
 ``` {r save dataframes as csv}
 write_csv(person_data, "people.csv")

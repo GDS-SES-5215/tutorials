@@ -1609,6 +1609,7 @@ library(tidyverse)</code></pre>
 <li>Units in structure (BLD) (categorical)</li>
 <li>Limited English-speaking household (LNGI) (categorical)</li>
 </ol>
+<p>As I download the data, I also want to convert the categorical variable indicating the age of the home (which gives ranges of years) to a continuous variable. I recommend looking through the <a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" target="_blank">Data Wrangling Cheat Sheet</a> for an overview of many of the functions that are available for reshaping and otherwise modifying a dataframe using the tools available in the tidyverse package. So far, we’ve used <code>filter()</code>, <code>select()</code>, and <code>distinct()</code>. In the code below, I also use <code>mutate()</code> to create a new (continuous) variable from an existing (categorical) variable.</p>
 <pre class="r"><code>hh_data &lt;- get_pums(variables = c(&quot;TEN&quot;, 
                                   &quot;YBL&quot;, 
                                   &quot;BDSP&quot;, 
@@ -1715,7 +1716,7 @@ counties</code></pre>
 </div>
 <div id="saving-data" class="section level2">
 <h2>Saving data</h2>
-<p>You can save any of the datasets you just created for future use by writing them to a csv file.</p>
+<p>You can save any of the datasets you just created for future use by writing them to a *.csv file.</p>
 <pre class="r"><code>write_csv(person_data, &quot;people.csv&quot;)
 write_csv(hh_data, &quot;households.csv&quot;)
 write_csv(counties, &quot;counties.csv&quot;)</code></pre>
