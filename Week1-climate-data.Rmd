@@ -22,7 +22,7 @@ The five variables I've decided to include are:
 2. Year (continuous)
 3. Average temperature in the United States (continuous)
 4. Annual carbon emissions in the United States (continuous)
-5. Whether the United States was in a recession
+5. Whether the United States was in a recession (categorical)
 
 I've downloaded temperature data from https://climateknowledgeportal.worldbank.org/download-data and saved it to a file called "temps_USA.csv" located in my working directory (my local GitHub repo). 
 
@@ -57,7 +57,7 @@ co2 <- read_csv("co2_USA.csv")
 temp <- read_csv("temps_USA.csv")
 ```
 
-## Reshape emissions data
+## Reshape data
 
 If I take a closer look at the emissions data, I'll see that it needs some tidying. All the data is in the first row (the next two rows are metadata). What I really want is a row for each year, with a column indicating the year and another column indicating the emissions for that year. 
 

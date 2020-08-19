@@ -1541,7 +1541,7 @@ div.tocify {
 <li>Year (continuous)</li>
 <li>Average temperature in the United States (continuous)</li>
 <li>Annual carbon emissions in the United States (continuous)</li>
-<li>Whether the United States was in a recession</li>
+<li>Whether the United States was in a recession (categorical)</li>
 </ol>
 <p>I’ve downloaded temperature data from <a href="https://climateknowledgeportal.worldbank.org/download-data" class="uri">https://climateknowledgeportal.worldbank.org/download-data</a> and saved it to a file called “temps_USA.csv” located in my working directory (my local GitHub repo).</p>
 <p>I’ve downloaded emissions data from <a href="https://www.climatewatchdata.org/ghg-emissions" class="uri">https://www.climatewatchdata.org/ghg-emissions</a> and saved it to a file called “co2_USA.csv” located in my working directory (my local GitHub repo).</p>
@@ -1560,13 +1560,14 @@ div.tocify {
 </ul>
 <p>I’ll be using the tidyverse package today, so I need to make sure I’ve installed it, and I need to load the package before I start.</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<div id="read-in-temperature-and-emissions-data" class="section level2">
-<h2>Read in temperature and emissions data</h2>
+<div id="load-data" class="section level2">
+<h2>Load data</h2>
 <p>The first thing I’ll do is read in the two files I’ve downloaded so I have them loaded in my R environment.</p>
 <pre class="r"><code>co2 &lt;- read_csv(&quot;co2_USA.csv&quot;)
 temp &lt;- read_csv(&quot;temps_USA.csv&quot;)</code></pre>
-<div id="reshape-emissions-data" class="section level3">
-<h3>Reshape emissions data</h3>
+</div>
+<div id="reshape-data" class="section level2">
+<h2>Reshape data</h2>
 <p>If I take a closer look at the emissions data, I’ll see that it needs some tidying. All the data is in the first row (the next two rows are metadata). What I really want is a row for each year, with a column indicating the year and another column indicating the emissions for that year.</p>
 <p>The tidyverse package has some helpful tools for rearranging data.</p>
 <p>I’ll use <code>select()</code> to delete the columns I don’t need (notice the negative sign before I list the variable, which indicates it’s a list of variables I want to discard rather than a list of variables I want to keep).</p>
@@ -1576,7 +1577,6 @@ temp &lt;- read_csv(&quot;temps_USA.csv&quot;)</code></pre>
   filter(!is.na(`1960`)) %&gt;%
   pivot_longer(everything(), names_to = &quot;Year&quot;, values_to = &quot;MtCO2e&quot;) %&gt;%
   mutate(Year = as.numeric(Year))</code></pre>
-</div>
 </div>
 <div id="join-data" class="section level2">
 <h2>Join data</h2>
@@ -1599,8 +1599,8 @@ temp &lt;- read_csv(&quot;temps_USA.csv&quot;)</code></pre>
   rename(temp_cels = `Temperature - (Celsius)`) %&gt;%
   select(temp_cels, MtCO2e, month, Year, month_num)</code></pre>
 </div>
-<div id="manually-add-a-recession-variable" class="section level2">
-<h2>Manually add a recession variable</h2>
+<div id="manually-add-a-variable" class="section level2">
+<h2>Manually add a variable</h2>
 <p>Now I need to add in the information I got from Wikipedia about when the recessions were.</p>
 <pre class="r"><code>all_data &lt;- all_data %&gt;%
   mutate(recession = (month_num &gt; 3 &amp; Year == 1960) |
