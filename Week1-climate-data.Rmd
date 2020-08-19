@@ -1,0 +1,130 @@
+---
+title: "Week 1: Data assembly (climate example)"
+author: "Carole Voulgaris"
+date: "9/3/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+For your first assignment, you might decide to assemble your dataset from multiple sources. This tutorial illustrates how you might put together a dataset relating to climate change.
+
+The five variables I've decided to include are:
+
+1. Month (categorical)
+2. Year (continuous)
+3. Average temperature in the United States (continuous)
+4. Annual carbon emissions in the United States (continuous)
+5. Whether the United States was in a recession
+
+I've downloaded temperature data from https://climateknowledgeportal.worldbank.org/download-data and saved it to a file called "temps_USA.csv" located in my working directory (my local GitHub repo). 
+
+I've downloaded emissions data from https://www.climatewatchdata.org/ghg-emissions and saved it to a file called "co2_USA.csv" located in my working directory (my local GitHub repo).
+
+In case it's helpful, I've posted a video [here](https://harvard.zoom.us/rec/share/_MNOI6up3VpIaYnsuUH4Hak4MabYaaa8gHUX86ZbyEkQyyn7aD3Zze93FNaI4Ivy?startTime=1597863367000){target="_blank"} that shows exactly how I downloaded and saved those files.
+
+I looked on [Wikipedia](https://en.wikipedia.org/wiki/List_of_recessions_in_the_United_States){target="_blank"} (sorry!) to identify the following recessions that have occurred in the United States since 1960:
+
+* April 1960 - February 1961
+* December 1969 - November 1970
+* November 1973 - March 1975
+* January 1980 - July 1980
+* July 1981 - November 1982
+* July 1990 - March 1991
+* March 2001 - November 2001
+* December 2007 - June 2009
+* February 2020 - present (since my other data only go to 2016, I won't include this)
+
+I'll be using the tidyverse package today, so I need to make sure I've installed it, and I need to load the package before I start.
+
+```{r load libraries}
+library(tidyverse)
+```
+
+## Load data
+
+The first thing I'll do is read in the two files I've downloaded so I have them loaded in my R environment.
+
+```{r load temperature and emissions data}
+co2 <- read_csv("co2_USA.csv")
+temp <- read_csv("temps_USA.csv")
+```
+
+## Reshape emissions data
+
+If I take a closer look at the emissions data, I'll see that it needs some tidying. All the data is in the first row (the next two rows are metadata). What I really want is a row for each year, with a column indicating the year and another column indicating the emissions for that year. 
+
+The tidyverse package has some helpful tools for rearranging data. 
+
+I'll use `select()` to delete the columns I don't need (notice the negative sign before I list the variable, which indicates it's a list of variables I want to discard rather than a list of variables I want to keep). 
+
+I'll use `pivot_longer()` to convert the year columns into a single variable that indicates the year. That will store the year as a character variable (a word) rather than as a number, so I'll use `mutate()` to convert it to a number.
+
+``` {r tidy emissions data}
+co2 <- co2 %>%
+  select(-c("Country/Region", "unit")) %>%
+  filter(!is.na(`1960`)) %>%
+  pivot_longer(everything(), names_to = "Year", values_to = "MtCO2e") %>%
+  mutate(Year = as.numeric(Year))
+```
+
+## Join data
+
+Both dataframes have a value called "Year," so I'll use that to join them into a single dataframe.
+
+``` {r join data}
+all_data <- inner_join(temp, co2) %>%
+  mutate(month = substr(Statistics, 1,3)) %>%
+  mutate(month_num = case_when(month == "Jan" ~ 1,
+                               month == "Feb" ~ 2,
+                               month == "Mar" ~ 3,
+                               month == "Apr" ~ 4,
+                               month == "May" ~ 5,
+                               month == "Jun" ~ 6,
+                               month == "Jul" ~ 7,
+                               month == "Aug" ~ 8,
+                               month == "Sep" ~ 9,
+                               month == "Oct" ~ 10,
+                               month == "Nov" ~ 11,
+                               month == "Dec" ~ 12,
+                               TRUE ~ 99)) %>%
+  rename(temp_cels = `Temperature - (Celsius)`) %>%
+  select(temp_cels, MtCO2e, month, Year, month_num)
+```
+
+## Manually add a variable
+
+Now I need to add in the information I got from Wikipedia about when the recessions were. 
+
+``` {r add recessions}
+all_data <- all_data %>%
+  mutate(recession = (month_num > 3 & Year == 1960) |
+                     (month_num < 3 & Year == 1961) |
+                     (month_num == 12 & Year == 1969) |
+                     (month_num != 12 & Year == 1970) |
+                     (month_num > 10 & Year == 1973) |
+                     (Year == 1974) |
+                     (month_num < 4 & Year == 1975) |
+                     (month_num < 8 & Year == 1980) |
+                     (month_num > 6 & Year == 1981) |
+                     (month_num != 12 & Year == 1982) |
+                     (month_num > 6 & Year == 1990) |
+                     (month_num < 4 & Year == 1991) |
+                     (month_num > 2 & month_num != 12 & Year == 2001) |
+                     (month_num == 12 & Year == 2007) |
+                     (Year == 2008) |
+                     (month_num < 7 & Year == 2009))
+```
+
+And now I can save that dataset to a csv file that I'll refer to in future assignments.
+
+``` {r save data}
+write_csv(all_data, "climate_dataset.csv")
+```
