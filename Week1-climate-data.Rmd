@@ -61,7 +61,7 @@ temp <- read_csv("temps_USA.csv")
 
 If I take a closer look at the emissions data, I'll see that it needs some tidying. All the data is in the first row (the next two rows are metadata). What I really want is a row for each year, with a column indicating the year and another column indicating the emissions for that year. 
 
-The tidyverse package has some helpful tools for rearranging data. 
+The tidyverse package has some helpful tools for rearranging data, and you can get a good overview of those tools on the [data wrangling cheat sheet](https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf){target="_blank"} published by the folks at RStudio.
 
 I'll use `select()` to delete the columns I don't need (notice the negative sign before I list the variable, which indicates it's a list of variables I want to discard rather than a list of variables I want to keep). 
 

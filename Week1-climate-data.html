@@ -1569,7 +1569,7 @@ temp &lt;- read_csv(&quot;temps_USA.csv&quot;)</code></pre>
 <div id="reshape-data" class="section level2">
 <h2>Reshape data</h2>
 <p>If I take a closer look at the emissions data, I’ll see that it needs some tidying. All the data is in the first row (the next two rows are metadata). What I really want is a row for each year, with a column indicating the year and another column indicating the emissions for that year.</p>
-<p>The tidyverse package has some helpful tools for rearranging data.</p>
+<p>The tidyverse package has some helpful tools for rearranging data, and you can get a good overview of those tools on the <a href="https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf" target="_blank">data wrangling cheat sheet</a> published by the folks at RStudio.</p>
 <p>I’ll use <code>select()</code> to delete the columns I don’t need (notice the negative sign before I list the variable, which indicates it’s a list of variables I want to discard rather than a list of variables I want to keep).</p>
 <p>I’ll use <code>pivot_longer()</code> to convert the year columns into a single variable that indicates the year. That will store the year as a character variable (a word) rather than as a number, so I’ll use <code>mutate()</code> to convert it to a number.</p>
 <pre class="r"><code>co2 &lt;- co2 %&gt;%
