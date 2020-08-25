@@ -36,6 +36,9 @@ For each week's assignment, I've posted a written tutorial here. Since R is a sc
 
 [Video tutorial 7: Combining data from multiple sources](https://harvard.zoom.us/rec/share/9-VNFY7frmxIRqP_tUzjVLYaIN_CT6a8gSgc_fVfxRp16pSmHhyktjMi5z-v5jwL?startTime=1597870022000){target="_blank"}
 
+### Additional Resources
+
+[R packages that provided other interesting datasets](https://kieranhealy.org/blog/archives/2020/08/25/some-data-packages/){target="_blank"}
 
 ## Week 2: Distributions and proportions
 
