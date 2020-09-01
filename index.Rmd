@@ -38,7 +38,7 @@ For each week's assignment, I've posted a written tutorial here. Since R is a sc
 
 ### Additional Resources
 
-[R packages that provided other interesting datasets](https://kieranhealy.org/blog/archives/2020/08/25/some-data-packages/){target="_blank"}
+[R packages that provide other interesting datasets](https://kieranhealy.org/blog/archives/2020/08/25/some-data-packages/){target="_blank"}
 
 ## Week 2: Distributions and proportions
 
