@@ -34,7 +34,7 @@ For each week's assignment, I've posted a written tutorial here. Since R is a sc
 
 [Video tutorial 5: Data wrangling and saving a dataset](https://harvard.zoom.us/rec/share/9fZVCbC3_0VLfImT-G7Ec4U7Adjkaaa80ChN-vMFyUz31QXnGff33ZXBBxMv4w3H?startTime=1597346628000){target="_blank"}
 
-[Video tutorial 6: Downloading data from data.census.gov (alternative to tidycensus method)](https://harvard.zoom.us/rec/share/sdB9IROmbvXOnvNq-AebhnCB2A47FX8aDfleB3vtN4L1quQ0sinhdonTLr3rCeUC.QEDjl2imJz6ZugFX?startTime=1599482021000){target="_blank"}
+[Video tutorial 6: Loading data that you've downloaded from data.census.gov (alternative to tidycensus method)](https://harvard.zoom.us/rec/share/sdB9IROmbvXOnvNq-AebhnCB2A47FX8aDfleB3vtN4L1quQ0sinhdonTLr3rCeUC.QEDjl2imJz6ZugFX?startTime=1599482021000){target="_blank"}
 
 [Video tutorial 7: Downloading data from multiple sources](https://harvard.zoom.us/rec/share/_MNOI6up3VpIaYnsuUH4Hak4MabYaaa8gHUX86ZbyEkQyyn7aD3Zze93FNaI4Ivy?startTime=1597863367000){target="_blank"}
 
