@@ -1,0 +1,67 @@
+---
+title: "Cleaning Data from data.census.gov"
+author: "Carole Voulgaris"
+date: "9/7/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Setup
+
+Before I begin, I'll load the tidyverse package.
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+## Loading data
+
+I previously downloaded a zipped file named ACSDT5Y2018.B07009_2020-09-07T084016.zip from data.census.gov and saved it to my working directory. The zipped file contains three files:
+
+1. The dataset (ACSDT5Y2018.B07009_data_with_overlays_2020-09-07T084012.csv)
+2. A list of variable names and descriptions (ACSDT5Y2018.B07009_metadata_2020-09-07T084012.csv)
+3. A description of the data source (ACSDT5Y2018.B07009_table_title_2020-09-07T084012.txt)
+
+We want to extract the files and save the two csv files as dataframes.
+
+``` {r load data, message = FALSE}
+unzip("ACSDT5Y2018.B07009_2020-09-07T084016.zip")
+
+variables <- read_csv("ACSDT5Y2018.B07009_metadata_2020-09-07T084012.csv")
+data <- read_csv("ACSDT5Y2018.B07009_data_with_overlays_2020-09-07T084012.csv", skip = 1)
+```
+
+## Choosing variables
+
+There are basically two variables in the table I've downloaded: Educational attainment and geographic mobility, so I probably need to download another table from data.census.gov to get the other variables I want for Assignment 1. For this example, let's say I want these two variables from the table:
+
+1. Whether the majority of the tract population has at least a four-year college degree
+2. The percentage of the population that has lived in the same house for the past year
+
+``` {r derive variables}
+data <- data %>%
+  mutate(pct_not_moved = `Estimate!!Total!!Same house 1 year ago` /
+                      `Estimate!!Total`,
+         pct_college = 
+           (`Estimate!!Total!!Bachelor's degree` +
+             `Estimate!!Total!!Graduate or professional degree`) /
+          `Estimate!!Total`) %>%
+  mutate(majority_college = pct_college > 0.5) %>%
+  mutate(geoid = substr(id, 10, 20)) %>%
+  select(geoid, pct_not_moved, majority_college)
+```
+
+And here are the first few rows of the resulting dataset:
+
+``` {r show data}
+data
+```
