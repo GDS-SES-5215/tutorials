@@ -1601,6 +1601,91 @@ library(tidyverse)</code></pre>
 ##  9 N/A (GQ/vacant) Female    35000    60     2
 ## 10 N/A (GQ/vacant) Male      21000    40    15
 ## # ... with 115,247 more rows</code></pre>
+<p>Alternatively, if you want to show those rows as a formatted table, you can use the <code>kable()</code> function in the <code>knitr</code> package.</p>
+<pre class="r"><code>knitr::kable(person_data[1:10,])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">TEN_label</th>
+<th align="left">SEX_label</th>
+<th align="right">PINCP</th>
+<th align="right">WKHP</th>
+<th align="right">JWMNP</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Female</td>
+<td align="right">35000</td>
+<td align="right">50</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Male</td>
+<td align="right">800</td>
+<td align="right">72</td>
+<td align="right">30</td>
+</tr>
+<tr class="odd">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Female</td>
+<td align="right">1400</td>
+<td align="right">19</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Female</td>
+<td align="right">5000</td>
+<td align="right">20</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Female</td>
+<td align="right">18000</td>
+<td align="right">40</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Male</td>
+<td align="right">7000</td>
+<td align="right">20</td>
+<td align="right">30</td>
+</tr>
+<tr class="odd">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Female</td>
+<td align="right">2200</td>
+<td align="right">30</td>
+<td align="right">60</td>
+</tr>
+<tr class="even">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Male</td>
+<td align="right">1600</td>
+<td align="right">15</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Female</td>
+<td align="right">35000</td>
+<td align="right">60</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">N/A (GQ/vacant)</td>
+<td align="left">Male</td>
+<td align="right">21000</td>
+<td align="right">40</td>
+<td align="right">15</td>
+</tr>
+</tbody>
+</table>
 <p>The method for getting household-level data is the same. You just need to make sure all of your variables are household-level variables. I’ll get this set of variables for all rented homes in New York state.</p>
 <ol style="list-style-type: decimal">
 <li>Age of structure (YBL) (categories we’ll convert to continuous)</li>

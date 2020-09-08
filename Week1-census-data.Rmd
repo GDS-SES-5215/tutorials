@@ -97,8 +97,15 @@ person_data <- get_pums(variables = c("TEN",
 ```
 
 You can type the name of the dataframe you created to show the first few rows.
-``` {r show person-level data}
+
+``` {r}
 person_data
+```
+
+Alternatively, if you want to show those rows as a formatted table, you can use the `kable()` function in the `knitr` package.
+
+``` {r show person-level data}
+knitr::kable(person_data[1:10,])
 ```
 
 The method for getting household-level data is the same. You just need to make sure all of your variables are household-level variables. I'll get this set of variables for all rented homes in New York state.
