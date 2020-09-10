@@ -26,15 +26,17 @@ y_right <- dnorm(x, mean = 2, sd = 1.0)
 y_wider <- dnorm(x, mean = 0, sd = 2.0)
 
 
-x_count <- seq(0, 100, by = 1)
-y_poisson <- dpois(x_count, lambda = 20)
-y_nbinom <- dnbinom(x_count, size = 100, prob = 0.75)
-y_log <- dlnorm(x_count, meanlog = 3, sdlog = 0.5)
+x_count <- seq(0, 20, by = 1)
+y_poisson <- dpois(x_count, lambda = 3)
+y_nbinom <- dnbinom(x_count, size = 20, prob = 0.9)
+
+x_log <- seq(0, 100, by = 1)
+y_log <- dlnorm(x_log, meanlog = 3, sdlog = 0.5)
 
 data_stand <- tibble(x = x, y = y_stand, dist = "standard")
 data_right <- tibble(x = x, y = y_right, dist = "shifted")
 data_wider <- tibble(x = x, y = y_wider, dist = "wide")
-data_log <- tibble(x = x_count, y = y_log)
+data_log <- tibble(x = x_log, y = y_log)
 
 data_poisson <- tibble(x = x_count, y = y_poisson)
 data_nbinom <- tibble(x = x_count, y = y_nbinom)
@@ -68,7 +70,7 @@ ggplot(data = data_poisson, aes(x = x, y = y)) +
   geom_bar(stat = "identity") +
   scale_x_continuous(name = "The Value of Some Variable") +
   scale_y_continuous(name = "Frequency",
-                     breaks = breaks <- seq(0, 0.1, by = 0.01),
+                     breaks = breaks <- seq(0, 0.3, by = 0.01),
                      labels = breaks * 1000) +
   theme_bw() 
 ```
@@ -80,7 +82,7 @@ ggplot(data = data_nbinom, aes(x = x, y = y)) +
   geom_bar(stat = "identity") +
   scale_x_continuous(name = "The Value of Some Variable") +
   scale_y_continuous(name = "Frequency",
-                     breaks = breaks <- seq(0, 0.1, by = 0.01),
+                     breaks = breaks <- seq(0, 0.3, by = 0.01),
                      labels = breaks * 1000) +
   theme_bw() 
 ```
@@ -160,13 +162,14 @@ Another measure of spread is the *range* of the data, which is just the differen
 
 Like the average, the standard deviation is sensitive to outliers (and the range is even more sensitive to ourliers). If you want a measure of spread, you can use ranges between *percentiles*. A percentile is the number below which a certain percentage of your data values fall. For example, term for a median would be the 50th percentile, because 50 percent of your data is less than the median value. The 25th, 50th, and 75th percentiles are also called *quartiles* and the difference between the 25th and 75th percentile 
 
-Here are the standard deviations for a normal distribution.
+Here is the width of a standard deviation for a normal distribution.
 
 ```{r, echo = FALSE}
-ggplot(data = data_wider, aes(x = x, y = y)) +
+ggplot(data = data_wider, aes(x = x, y = y,
+                              xmin = 0, xmax = 2,
+                              ymin = Inf, ymax = -Inf)) +
+  geom_rect(color = "gray", alpha = 0.8) +
   geom_line() +
-  geom_vline(xintercept = 0) +
-  geom_vline(xintercept = 2) +
   theme_bw() +
   theme(legend.position = "none",
         axis.text = element_blank(),
@@ -176,13 +179,14 @@ ggplot(data = data_wider, aes(x = x, y = y)) +
 And here is the interquartile range:
 
 ```{r, echo = FALSE}
-ggplot(data = data_wider, aes(x = x, y = y)) +
-  geom_line() +
-  geom_vline(xintercept = -2*0.67448) +
-  geom_vline(xintercept = 2*0.67448) +
-      annotate("text", x = 0, y = 0.08, size = 4, 
+ggplot(data = data_wider, aes(x = x, y = y,
+                              xmin = -2*0.67448, xmax = 2*0.67448,
+                              ymin = Inf, ymax = -Inf)) +
+  geom_rect(color = "gray", alpha = 0.8) +
+  annotate("text", x = 0, y = 0.08, size = 4, 
            label = "50% of the data",
            hjust = 0.5) +
+  geom_line() +
   annotate("text", x = -2.8, y = 0.02, size = 4, 
            label = "25% of the data",
            hjust = 0.5) +
@@ -191,7 +195,7 @@ ggplot(data = data_wider, aes(x = x, y = y)) +
            hjust = 0.5) +
   theme_bw() +
   theme(legend.position = "none",
-        axis.text = element_blank(),
+      #  axis.text = element_blank(),
         axis.title = element_blank())
 ```
 
