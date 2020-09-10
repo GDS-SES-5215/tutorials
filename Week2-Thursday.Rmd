@@ -160,15 +160,17 @@ Spread is commonly measured in terms of *standard deviation*, which you can thin
 
 Another measure of spread is the *range* of the data, which is just the difference between the minimum and maximum values.
 
-Like the average, the standard deviation is sensitive to outliers (and the range is even more sensitive to ourliers). If you want a measure of spread, you can use ranges between *percentiles*. A percentile is the number below which a certain percentage of your data values fall. For example, term for a median would be the 50th percentile, because 50 percent of your data is less than the median value. The 25th, 50th, and 75th percentiles are also called *quartiles* and the difference between the 25th and 75th percentile 
+Like the average, the standard deviation is sensitive to outliers (and the range is even more sensitive to ourliers). If you want a measure of spread, you can use ranges between *percentiles*. A percentile is the number below which a certain percentage of your data values fall. For example, term for a median would be the 50th percentile, because 50 percent of your data is less than the median value. The 25th, 50th, and 75th percentiles are also called *quartiles* and the difference between the 25th and 75th percentile. 
 
-Here is the width of a standard deviation for a normal distribution.
+Here is are two normal distributions with the same mean/median, different standard deviations. The width of one standard deviation for a normal distribution for the narrower distribution is shown in darker gray, and the width of one standard deviation for the wider of the two distributions is shown in lighter gray.
 
 ```{r, echo = FALSE}
-ggplot(data = data_wider, aes(x = x, y = y,
-                              xmin = 0, xmax = 2,
+ggplot(data = data_stretch, aes(x = x, y = y, lty = dist,
                               ymin = Inf, ymax = -Inf)) +
-  geom_rect(color = "gray", alpha = 0.8) +
+  geom_rect(fill = "darkgray", alpha = 0.8, 
+            aes(xmin = 0, xmax = 1)) +
+  geom_rect(fill = "lightgray", alpha = 0.1, 
+            aes(xmin = -2, xmax = 0)) +
   geom_line() +
   theme_bw() +
   theme(legend.position = "none",
@@ -176,7 +178,7 @@ ggplot(data = data_wider, aes(x = x, y = y,
         axis.title = element_blank())
 ```
 
-And here is the interquartile range:
+And here is the interquartile range of a normal distribution:
 
 ```{r, echo = FALSE}
 ggplot(data = data_wider, aes(x = x, y = y,
