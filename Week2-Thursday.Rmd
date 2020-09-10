@@ -45,7 +45,7 @@ data_stretch <- rbind(data_stand, data_wider)
 
 ## The Normal Distribution
 
-This is a histogram of some made-up continuous variable that is normally distributed. A lot of variables in the real world end of following a distribution like this, or at least sort of like this - where the average value is also the most common value, and values lower and higher than that are pretty much equally common. In popular culture, you'll sometimes see this referred to as a "bell curve." 
+This is a histogram of some made-up continuous variable that is normally distributed. A lot of variables in the real world end up following a distribution like this, or at least sort of like this - where the average value is also the most common value, and values lower and higher than that are pretty much equally common. In popular culture, you'll sometimes see this referred to as a "bell curve." 
 
 ```{r, echo = FALSE}
 ggplot(data = data_stand, aes(x = x, y = y)) +
@@ -154,7 +154,7 @@ ggplot(data = data_log, aes(x = x, y = y)) +
 
 ### Spread
 
-Spread is commonly measured in terms of *standard deviation*, which you can think of as the average difference bewteen all all the values in your dataset and the average value (that's not quite what the math is, but that's basically it). It's a measure of how much variation there is in the data - if all your observations had the same value, the standard deviation would be zero.
+Spread is commonly measured in terms of *standard deviation*, which you can think of as the average difference bewteen all the values in your dataset and the average value (that's not quite what the math is, but that's basically it). It's a measure of how much variation there is in the data - if all your observations had the same value, the standard deviation would be zero.
 
 Another measure of spread is the *range* of the data, which is just the difference between the minimum and maximum values.
 
@@ -197,9 +197,9 @@ ggplot(data = data_wider, aes(x = x, y = y)) +
 
 ## Uncertainty in the population mean
 
-Let's say you wanted to know the average amount of time that graduate students at Harvard spend studying. You could randomly select 100 graduate students and ask them to tell you how may hours they spend studying for week. It would be an incredible coincidence if the average among those 100 students turned out to be exactly the same as the average for all grad students at Harvard. But here's a fun fact:
+Let's say you wanted to know the average amount of time that graduate students at Harvard spend studying. You could randomly select 100 graduate students and ask them to tell you how may hours they spend studying each week. It would be an incredible coincidence if the average among those 100 students turned out to be exactly the same as the average for all grad students at Harvard. But here's a fun fact:
 
-If you did a whole bunch of surveys, and each one included 100 randomly selected students, and you took the average time studying from each of those surveys, the average of all those average would be the average of the full population, and the distribution of all those averages would be a normal distributions. 
+If you did a whole bunch of surveys, and each one included 100 randomly selected students, and you took the average time studying from each of those surveys, the average of all those averages would be the average of the full population, and the distribution of all those averages would be a normal distributions. 
 
 As a result of this fun fact, it's possible to take the average and standard deviation from one of those surveys and calculate a range of values where you can be 95 percent confident that the real average for the full population is somewhere in that range. This is called a *95-percent confidence interval*.
 
