@@ -110,7 +110,7 @@ ggplot(data = data_log, aes(x = x, y = 600)) +
   theme_bw() 
 ```
 
-But in this course, we'll be focusing data that's normally distributed.
+But in this course, we'll be focusing on data that's normally distributed.
 
 ## Describing a distribution
 
