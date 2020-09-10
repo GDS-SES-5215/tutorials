@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time.
 
 ```{r load libraries}
-library(tidycensus)
 library(tidyverse)
 library(ggplot2)
 ```
