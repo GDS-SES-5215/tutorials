@@ -1,0 +1,105 @@
+---
+title: "Week 1: Finding Census Data"
+author: "Carole Voulgaris"
+date: "9/3/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+
+
+```{r load libraries, message=FALSE}
+library(tidycensus)
+library(tidyverse)
+```
+
+
+
+
+## Loading data
+
+Let's say I've decided to to a person-level analysis. After looking through the variables available in `person_vars_2018`, I've chosen the following five variables: 
+
+1. Sex (SEX) (categorical)
+3. Income (PINCP) (continuous)
+2. Number of bedrooms (BDSP) (continuous)
+3. Monthly rent (GRNTP) (continuous)
+
+``` {r load household-level data, results = 'hide'}
+data <- get_pums(variables = c("SEX","PINCP", 
+                                  "BDSP", 
+                                  "GRNTP", "TEN"),
+                        state = "RI", 
+                        year = 2018, 
+                        survey = "acs1",
+                        recode = TRUE) %>%
+  filter(TEN_label != "N/A (GQ/vacant)")
+```
+
+```{r show household data}
+
+data
+  
+```
+
+
+
+Or maybe I want to do an area-level analysis. I'll get (or calculate) the following five variables for each county in the United States:
+
+1. Percent of population with a college degree (age 25 to 64) (continuous)
+2. Unemployment rate (age 16 and over) (continuous)
+3. Median income (continuous)
+4. Racial composition (majority white or majority minority) (categorical)
+5. Rural (100% rural population from 2010 census) (categorical)
+
+``` {r load county-level data}
+pop_vars <- c(workers_16 = "B23025_002",
+          unemp_pop_16 = "B23025_005",
+          college_25 = "B23006_023",
+          popln_25 = "B23006_001",
+          med_income = "B06011_001",
+          tot_pop = "B01003_001",
+          white_pop = "B01001A_001")
+
+rural_vars <- c(total_hh = "H002001",
+                rural_hh = "H002005")
+
+counties2018 <- get_acs(geography = "county", 
+                        variables = pop_vars, 
+                        output = "wide",
+                        year  = 2018,
+                        survey = "acs1")
+
+counties_rural <- get_decennial(geography = "county", 
+                                variables = rural_vars, 
+                                output = "wide",
+                                year = 2010)
+
+counties <- inner_join(counties2018, counties_rural, by = "GEOID") %>%
+  mutate(pct_college = college_25E / popln_25E,
+         unemp_rate = unemp_pop_16E / workers_16E,
+         majority_white = white_popE / tot_popE > 0.5,
+         rural = rural_hh == total_hh) %>%
+  select(pct_college, unemp_rate, med_incomeE, 
+                majority_white, rural)
+
+counties
+```
+
+## Saving data
+
+You can save any of the datasets you just created for future use by writing them to a *.csv file. 
+
+``` {r save dataframes as csv}
+write_csv(person_data, "people.csv")
+write_csv(hh_data, "households.csv")
+write_csv(counties, "counties.csv")
+```
