@@ -1,0 +1,160 @@
+---
+title: "Week 2: Distributions and proportions (calculations only)"
+author: "Carole Voulgaris"
+date: "9/10/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time.
+
+```{r load libraries}
+library(tidyverse)
+library(ggplot2)
+```
+
+Let's start by loading the person-level dataset we created last week.
+
+`read_csv()` loads the data into our environment.
+
+```{r load data, message=FALSE}
+person_data <- read_csv("people.csv")
+```
+
+## Distribution of a continuous variable
+Let's start by looking at the distribution of the amount of time (in minutes) people spend traveling to work. 
+
+### Summary statistics
+The `summary()` function can quickly give us a quick summary 
+
+```{r quick summary statistics}
+JWMNP_summary <- summary(person_data$JWMNP)
+
+JWMNP_summary
+```
+
+I can access the individual parts of the JWMNP_summary object as well. For example, maybe I'm only interested in the mean.
+
+```{r}
+JWMNP_summary["Mean"]
+```
+
+Or maybe I'm only interested in the value of the third quartile.
+
+```{r}
+JWMNP_summary["3rd Qu."]
+```
+
+On the other hand, if I'm only interested in the mean, it's even easier to just use the `mean()` function.
+
+```{r}
+mean(person_data$JWMNP)
+```
+
+Likewise, if I only want the median, I can use the `median()` function
+
+```{r}
+median(person_data$JWMNP)
+```
+
+If I only want the quartile values (including the minimum and maximum), I can use the `quantile` function.
+
+```{r}
+quantile(person_data$JWMNP)
+```
+
+And if I only want the 25th percentile, I can grab just that piece.
+
+```{r}
+quantile(person_data$JWMNP)["25%"]
+```
+
+I can use the function `sd()` to get the sample standard deviation (which isn't included in the output of the `summary()` function).
+
+```{r}
+sd(person_data$JWMNP)
+```
+
+To get a 95-percent confidence interval for the population mean, I'll use the t.test() function to do a one-sample t-test.
+
+```{r}
+conf_int <- t.test(person_data$JWMNP)
+
+conf_int
+```
+
+I can grab just the center of that confidence interval, which will be the same as the sample mean.
+
+```{r}
+conf_int$estimate
+```
+
+And I can also get just the lower and upper limits of the confidence interval. Here's the lower limit:
+
+```{r}
+conf_int$conf.int[1]
+```
+
+And here's the upper limit:
+
+```{r}
+conf_int$conf.int[2]
+```
+
+### Histogram
+All of the above numbers are useful for describing the distribution, and it also helps to visualize it with a histogram. `hist()` will generate a quick histogram for you.
+
+```{r}
+hist(person_data$JWMNP)
+```
+
+But I prefer to use `geom_histogram()` with `ggplot()` to take full advantage of the features of the `ggplot2` library.
+
+```{r}
+ggplot(person_data, aes(x = JWMNP)) +
+  geom_histogram()
+```
+
+The distribution is skewed a little to the right. It actually looks like it might be closer to a Poisson distribution or negative binomial distribution than to a normal distribution. You might notice that there's a little bump in the number of people who report having a 60-minute journey to work. This is not unusual for self-reported time use. It's likely that people with 55-minute and 65-minute commutes are rounding to 60 minutes.
+
+## Proportions of a categorical variable
+
+We can use `unique()` to list all the possible values of a categorical vairable.
+
+```{r}
+unique(person_data$TEN_label)
+```
+
+It looks like there are five different tenure categories in my sample. What proportion of the sample is in each one?
+
+I can use `table()` to get the number of observations in each category.
+
+```{r}
+table(person_data$TEN_label)
+```
+
+And I can convert those numbers to proportions by dividing by the total number of observations.
+
+```{r}
+table(person_data$TEN_label) / sum(table(person_data$TEN_label))
+```
+
+I can also calculate each of those proportions individually as the average of a binary (TRUE/FALSE) variable. For example, the proportion of the sample that live in homes they own free and clear:
+
+```{r}
+mean(person_data$TEN_label == "Owned free and clear")
+```
+
+I can use the `t.test()` function to get the 95-percent confidence interval for that proportion too.
+
+```{r}
+t.test(person_data$TEN_label == "Owned free and clear")
+```
