@@ -50,7 +50,7 @@ For each week's assignment, I've posted a written tutorial here. Since R is a sc
 
 ## Week 2: Distributions and proportions
 
-[Written tutorial 1: Calculations only](https://ses-5215-f2020.github.io/tutorials/Week2--calculations-only){target="_blank"}
+[Written tutorial 1: Calculations only](https://ses-5215-f2020.github.io/tutorials/Week2---calculations-only){target="_blank"}
 
 [Written tutorial 2: Calculations with text/number formatting](https://ses-5215-f2020.github.io/tutorials/Week2---with-formatting){target="_blank"}
 
