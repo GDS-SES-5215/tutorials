@@ -1,5 +1,5 @@
 ---
-title: "Week 2: Distributions and proportions"
+title: "Week 2: Distributions and proportions (including formatting)"
 author: "Carole Voulgaris"
 date: "9/10/2020"
 output: 
@@ -14,7 +14,9 @@ output:
 knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
-For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time.
+Once you've looked through the [calculations only](https://ses-5215-f2020.github.io/tutorials/Week2--calculatoins-only){target="_blank"} tutorial, you might look through this one for some examples that would be helpful for creating a formatted report with the results of your analysis.
+
+I'll be using the following libraries, so make sure they're installed ahead of time.
 
 ```{r load libraries}
 library(tidyverse)
