@@ -22,6 +22,8 @@ For each week's assignment, I've posted a written tutorial here. Since R is a sc
 
 [Written tutorial 3: Getting data from the census (using the data.census.gov)](https://ses-5215-f2020.github.io/tutorials/Week1-census2){target="_blank"}
 
+[Written tutorial 4: Aggregating data from the person-level to the household leve](https://ses-5215-f2020.github.io/tutorials/aggregating){target="_blank"}
+
 ### Video tutorials
 
 [Video tutorial 1: Installing Git, R, and RStudio (PC)](https://harvard.zoom.us/rec/share/5tZOLbb612BOHJ3g1xz2X_9-Jb7LT6a80HdP__BfxEvMfboEVuMLawEevGOMkjGY){target="_blank"}
