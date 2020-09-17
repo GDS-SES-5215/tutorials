@@ -296,7 +296,7 @@ And when I say "you", I mean R. Don't do those calculations by hand. That's why 
 
 ## One last thing: Words matter
 
-You'll notice that the word **significant** has a specific meaning when we're talking about quantitative analysis. In everyday speech, we often say there's a 'significant difference' or a 'significant increase' when we're just talking about a big differnce, but we aren't really intending to say anything about statistical significance.
+You'll notice that the word **significant** has a specific meaning when we're talking about quantitative analysis. In everyday speech, we often say there's a 'significant difference' or a 'significant increase' when we're just talking about a big difference, but we aren't really intending to say anything about statistical significance.
 
 When you're writing or talking about data, you should avoid using the word significant if you aren't talking about statistical significance. Some good alternatives are "substantial" or "noteworthy" or even just "big" (better to use a small word that says what you mean than to misuse a big word).
 
