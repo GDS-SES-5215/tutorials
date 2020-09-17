@@ -278,6 +278,8 @@ You could take the average within each category, but even if the categories aren
 
 The answer is: You can do a **two-sample t-test**! This will give you the 95-percent confidence interval for the difference between the two averages, as well as the p-value (significance) of that difference.
 
+You can think of the result of a two-sample t-test as the average difference between points in the categories. Just like with any average, you can calculate a 95-percentile for the population mean, which in this case is the average difference. If the 95-percent confidence interval includes zero, then you can't say for sure (or at least, with 95-percent confidence) that there's any difference between the two groups. If the 95-percent confidence interval does not include zero (either all positive or all negative numbers), then there is a significant difference.  
+
 ## The relationship between a continuous variable and a categorical variable with three or more levels.
 
 An **Analysis of Variance (ANOVA) test** will give you the significance of the relationship between a categorical variable and a continuous variables. In other words, it will give you a p-value representing the likelihood that there is being in any particular category has relationship with what the value of the continuous variable will be.
@@ -290,4 +292,14 @@ That's not a super interesting thing to know, because even if the ANOVA tells yo
 
 A **Chi-square test** can tell you if two categorical variables are related to each other. The way it works is, you generate a table showing how many observations are in each possible combination of the two categories. Then you generate another table showing what that table would have looked like if the two categories had nothing to do with each other. Then, you can calculate a p-value to tell you whether the tables are different enough from each other that the difference can't just be a coincidence.
 
-And when I say "you", I mean R. Don't do those calculations by hand.
+And when I say "you", I mean R. Don't do those calculations by hand. That's why there are computers.
+
+## One last thing: Words matter
+
+You'll notice that the word **significant** has a specific meaning when we're talking about quantitative analysis. In everyday speech, we often say there's a 'significant difference' or a 'significant increase' when we're just talking about a big differnce, but we aren't really intending to say anything about statistical significance.
+
+When you're writing or talking about data, you should avoid using the word significant if you aren't talking about statistical significance. Some good alternatives are "substantial" or "noteworthy" or even just "big" (better to use a small word that says what you mean than to misuse a big word).
+
+One other place where the word "significant" can get you into trouble, specific to planning: 
+
+In environmental impact studies in the United States, if you find that a project will have a "significant impact," it will be subject to more intense review. In this case, you're not talking about statistical significance, but the word significant still has a precise, legal meaning. Anytime you write anything that might be the the subject of review under the National Environmental Protection Act (NEPA) or any of its state-level equivalents (e.g. SEPA in Washington or CEQA in California), you want to be careful that you're not throwing the word "significant" around casually.
