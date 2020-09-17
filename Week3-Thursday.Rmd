@@ -227,7 +227,7 @@ ggplot(data_n1, aes(X, Y)) +
   theme_few()
 ```
 
-Keep in mind though, just because the correlation is zero, that doesn't mean there's no relationship. It just means there isn't a linear relationship.
+Keep in mind though, just because the correlation is zero, that doesn't mean there's no relationship. It just means there isn't a linear relationship. In the example below, the two variables have a pretty clear relationship, based on the scatter plot, but since it isn't a linear relationship, the correlation is zero.
 
 ```{r, echo=FALSE}
 data_trick <- tibble(X = seq(-3.5, 3.5, by = 0.1),
@@ -240,6 +240,22 @@ ggplot(data_trick, aes(X, Y)) +
                      limits = c(-4, 4)) +
   scale_y_continuous(name = "Some other variable", 
                      limits = c(-10, 25)) +
+  theme_few()
+```
+
+If there's a non-linear relationship between two variables, you can often transform the data to come up with a linear relationship. The graph below is the same data as in the graph above, but the x-values have been squared.
+
+```{r, echo=FALSE}
+data_trick <- tibble(X = seq(-3.5, 3.5, by = 0.1),
+                     Y = X^2)
+
+ggplot(data_trick, aes(X^2, Y)) +
+  geom_point() +
+  annotate("text", x = 3, y = 16, label = "Correlation = 1") +
+    scale_x_continuous(name = "Some variable, squared", 
+                     limits = c(0, 20)) +
+  scale_y_continuous(name = "Some other variable", 
+                     limits = c(0, 20)) +
   theme_few()
 ```
 
