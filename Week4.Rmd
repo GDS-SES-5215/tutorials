@@ -1,0 +1,182 @@
+---
+title: "Week 3: Relationships"
+author: "Carole Voulgaris"
+date: "9/10/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time.
+
+```{r load libraries}
+library(tidyverse)
+library(ggplot2)
+```
+
+Let's start by loading the household-level dataset we created in week 1.
+
+Again, `read_csv()` loads the data into our environment. 
+
+I'm going to recode a couple of variables as well. This is the same thing I did at the start of the [Week 3 tutorial](https://ses-5215-f2020.github.io/tutorials/Week3){target="_blank"}.
+
+```{r load data, results='hide'}
+hh_data <- read_csv("households.csv") %>%
+  mutate(struct_type = case_when(
+    BLD_label=="2 Apartments"~"Building with fewer\nthan 10 apartments",
+    BLD_label=="10-19 Apartments"~"Building with 10\nto 49 apartments",
+    BLD_label=="One-family house detached" ~ "Single-family home",
+    BLD_label=="3-4 Apartments" ~ "Building with fewer\nthan 10 apartments",
+    BLD_label=="Mobile home or trailer" ~ "Mobile home or vehicle",
+    BLD_label=="50 or more apartments" ~ "Building with 50+\napartments",
+    BLD_label=="20-49 Apartments" ~ "Building with 10\nto 49 apartments",
+    BLD_label=="5-9 Apartments"~"Building with fewer\nthan 10 apartments",
+    BLD_label=="One-family house attached" ~ "Single-family home",
+    BLD_label=="Boat, RV, van, etc." ~ "Mobile home or vehicle"))
+```
+
+## Linear regression
+I'll do a linear regression
+
+``` {r two continuous}
+correlation <- cor.test(hh_data$age_struct, hh_data$GRNTP)
+
+correlation
+```
+
+We can visualize the same relationship with a scatter plot. Since a lot of the dots would be plotted right on top of each other, I'll make it a litte easier to differentiate among individiual points by making them quite small (`size = 0.5`), making them mostly transparent (`alpha = 0.25`), and jittering their positions.
+
+I'll also add a trendline to the scatterplot using geom_smooth().
+
+``` {r scatter plot}
+ggplot(hh_data, aes(x = age_struct, y = GRNTP)) +
+  geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
+  geom_smooth() +
+  theme_bw() +
+  scale_x_continuous(name = "Age of structure (years)") +
+  scale_y_continuous(name = "Gross monthly rent", 
+                     breaks = seq(0, 6000, by = 500),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 6000, by = 500),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 0, y = 5000, 
+           label = paste("Correlation (95-percent confidence):",
+                         prettyNum(correlation$conf.int[1], digits = 2), 
+                         "to",
+                         prettyNum(correlation$conf.int[2], digits = 2)),
+           hjust = 0)
+  
+```
+
+The correlation is pretty weak, but it is statistically signicant. Looking at the trendline, the low magnitude of the correlation might be because the relationship levels off (and may even become positive) for structures that are older than about 40 years.
+
+## Relationship between a continuous variable and a binary variable
+
+In thinking about the relationship between a continuous variable and a binary variable, the question we should ask ourselves is "Is the value of the continuous variable different for one value of the binary variable than for the other?" A two-sample t.test is the perfect tool to answer this question.
+
+For example, do households with limited English proficiency pay higher or lower rents than those with full English proficiency?
+
+``` {r two-sample t-test}
+difference = t.test(GRNTP ~ LNGI_label == "At least one person in the household 14 and over speaks English only or speaks English 'very well'",
+                    data = hh_data)
+
+difference
+```
+
+Households with limited English proficiency generally pay lower rents than those with full English proficiency. We can visualize this result with a violin plot.
+
+``` {r bar chart}
+ggplot(hh_data, aes(x = LNGI_label, y = GRNTP)) +
+  geom_violin() +
+  theme_bw() +
+  scale_x_discrete(name = "Is someone in the household over 13 and proficient in English?",
+                   labels = c("No", "Yes")) +
+   scale_y_continuous(name = "Gross monthly rent", 
+                     breaks = seq(0, 6000, by = 500),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 6000, by = 500),
+                                              big.mark = ","))) +
+  annotate(geom = "text", x = 1.5, y = 2500, size = 3,
+           label = paste("Difference in means\n(95% confidence):\n$",
+                         prettyNum(abs(difference$conf.int[2]), 
+                                   digits = 0), " to $",
+                         prettyNum(abs(difference$conf.int[1]), 
+                                   digits = 0),
+                         sep = "")) +
+  annotate(geom = "text", x = 1, y = difference$estimate[1], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[1], digits = 0))) +
+  annotate(geom = "text", x = 2, y = difference$estimate[2], size = 3,
+           label = paste("Mean (95% confidence):\n$",
+                         prettyNum(difference$estimate[2], digits = 0)))
+```
+
+## Relationship between a continuous variable and a categorical variable (three or more levels)
+
+A two-sample t-test is most useful for categorical variables with only two categories. What if there are more than two categories? In that case, we want to do an analysis of variance to determine 
+
+``` {r ANOVA}
+anova <- aov(GRNTP ~ struct_type, data = hh_data)
+
+summary(anova)
+```
+
+The p-value is much lower than 0.05, so this tells us that, at a 95-percent confidence interval, there is a significant association between the type of structure and the monthly rent. We can take this a step further by doing a Tukey's Honestly Significant Difference test to see the magnitude of the differences among the difference categories.
+
+``` {r Tukeys HSD}
+differences <- TukeyHSD(anova)
+
+as_tibble(cbind(pair = row.names(differences$struct_type),
+                differences$struct_type))
+```
+
+Again, you could visulize those differences with a violin plot. Just for the sake of variety though, let's do a box plot.
+
+``` {r building type violin}
+ggplot(hh_data, aes(x = struct_type, y = GRNTP)) +
+  geom_boxplot() +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_x_discrete(name = "Type of structure") +
+  scale_y_continuous(name = "Gross monthly rent", 
+                     breaks = seq(0, 6000, by = 1000),
+                     labels = paste("$", 
+                                    prettyNum(seq(0, 6000, by = 1000),
+                                              big.mark = ","))) 
+  
+```
+
+## Relatship between two categorical variables
+
+The Chi-square test of association is for determining whether there is a statistically significant association between two categorical variables. It's based on calculating the number of observations in each possible combination of categories and comparing that distribution to what you would expect if there was no relationship.
+
+Is there a relationship between the type of structure a household lives in and their English proficiency?
+
+``` {r chi square}
+chi_sq <- chisq.test(hh_data$struct_type, hh_data$LNGI_label == 
+                       "At least one person in the household 14 and over speaks English only or speaks English 'very well'") 
+
+chi_sq
+```
+
+The p-value is much less than 0.05, so the relationship is significant at a 95-percent confidence level. 
+
+Here are the values we observe for each combination of variables (`TRUE` and `FALSE` refer to whether there is a household member over the age of 14 who speaks English either exclusively or "very well").
+
+``` {r chi square observed}
+chi_sq$observed
+```
+
+Here are the values we would expect if the two variables were not related:
+
+``` {r chi square expected}
+chi_sq$expected
+```
+

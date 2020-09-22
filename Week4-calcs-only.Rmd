@@ -1,0 +1,92 @@
+---
+title: "Week 3: Relationships"
+author: "Carole Voulgaris"
+date: "9/10/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time. I'll be using the tidyverse library to recode my data.
+
+```{r load libraries}
+library(tidyverse)
+```
+
+## Loading the data
+
+Let's start by loading the household-level dataset we created in week 1.
+
+Again, `read_csv()` loads the data into our environment. 
+
+I'm going to recode a couple of variables as well. This is more or less the same thing I did at the start of the [Week 3 tutorial](https://ses-5215-f2020.github.io/tutorials/Week3){target="_blank"}.
+
+I'm favoring short variable names, as well as short names for the values of categorical variables. THat will make your regression output easier to read.
+
+```{r load data, results='hide'}
+hh_data <- read_csv("households.csv") %>%
+  mutate(struct_type = case_when(
+    BLD_label=="2 Apartments" ~ "LT_10_apts",
+    BLD_label=="10-19 Apartments" ~ "TenTo49apts",
+    BLD_label=="One-family house detached" ~ "SFhome",
+    BLD_label=="3-4 Apartments" ~ "LT_10_apts",
+    BLD_label=="Mobile home or trailer" ~ "MH_veh",
+    BLD_label=="50 or more apartments" ~ "GT_49_apts",
+    BLD_label=="20-49 Apartments" ~ "TenTo49apts",
+    BLD_label=="5-9 Apartments" ~ "LT_10_apts",
+    BLD_label=="One-family house attached" ~ "1SFhome",
+    BLD_label=="Boat, RV, van, etc." ~ "MH_veh")) %>%
+  mutate(engl_prof = 
+           LNGI_label == "At least one person in the household 14 and over speaks English only or speaks English 'very well'")
+```
+
+## Estimating a regression model
+
+Once you've got the data all cleaned up the way you want it, there really isn't much code you need to write for this analysis.
+
+I'll do a linear regression predicting monthly rent based on the age of the structure, the number of bedrooms, the building type, and the English language proficiency of the residents.
+
+`lm()` means we're doing a linear regression. We're saving at to an object called `model` with all the results of the regression, and we can see a summary of those results.
+
+The stuff inside the `lm()` function is in two parts, separated onto two lines (in this case - you don't have to have them on separate lines). 
+
+The part on the first line is the regression formula. The part of the formula before the `~` is the **dependent variable**, or the value you're trying to predict. The part of the formula after the `~` is a list of **independent variables**, separated by `+` signs. These are the variables that you're using to predict values of the **dependent variable**.
+
+The stuff in the second line of the the `lm()` function below is where you tell the `lm()` functin what dataframe it should look in to find all these variables.
+
+``` {r two continuous}
+model <- lm(GRNTP ~ age_struct + BDSP + struct_type + engl_prof, 
+            data = hh_data)
+
+summary(model)
+```
+
+## Interpreting the results
+
+Cool! What does all that mean? The first thing we want to look at is the overall **model fit.** For linear regression, a common measure of model fit is the R-squared value. The multiple R-squared value for this model is 0.037, which tells us that this model predicts about 4% of the variation in rental costs of the homes in this dataset. That's not very much, but it would be pretty nuts if you could predict most of the variation in rental costs with just these four variables. In the social sciences, we don't generally expect to come up with really high R-squared values. The best use of a model fit metric is to compare two alternative models (more on that next week).
+
+Next we'll look at the values and significance of the individual model coefficients. We'll start with the values of the coefficients, which we can find in the "Estimate" column. The value in this column tell you how much of a change in the dependent variable you can expect for each unit of change in the independent variable listed in that row of the table.
+
+In the results above, the coefficient estimate for `age_struct` is -1.4654. This tells us that for each additional year in a building's age, the rent for the homes in that building decrease by $1.47, on average, controlling for differences in the number of bedrooms, differences in structure type, and whether the residents are proficient in English.
+
+The coefficient estimate of `BDSP` is 108.9489. This tells us that each additional bedroom in a home is associated with an average increase in rent of $109, on average, controlling for the other variables in the model.
+
+The coefficients for the individual categories of your categorical variables are all relative to a base case, or a reference category. 
+
+For structure type, everything is compared to a single-family home (you can tell because that's the category that isn't shown in the coefficients table). The coefficient for buildings with more than 49 units is 45.5194. This means that, on average and controlling for everything else in the model, the rent for a home in a building with more than 49 units will be $45.52 more than the rent would be for a single-family home. 
+
+The coefficient for a mobile home or vehicle is -769.7138, which indicated that the rent for a mobile home would be $769.71 less than for a comparable single-family home.
+
+The coefficient for English language proficiency is 117.5494, meaning that households in which at least one person over the age of 14 speaks English either exclusively or very well pay an average of $117.55 more in rent than households with limited English proficiency do, controlling for everything else in the model.
+
+If the coefficients for one of your independent variables were zero, that would mean that it has no relationship with the dependent variable, and the p-value is the probability the coefficient for the full population would actually be zero. If the 95-percent confidence interval for the coeffiency does not include zero, the p-value will be less than 0.05. 
+
+A coefficient is significant at a 95-percent confidence level if the p-values in the coefficents table are less than 0.05. The stars next to the p-values give you a quick visual summary as well; if there is at least one star, the p-value is less than 0.05, and the coeffient is statistically significant. All of the variables in this model are statistically significant.
+

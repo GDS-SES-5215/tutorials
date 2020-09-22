@@ -136,6 +136,11 @@ shares <- tibble(Tenure = c("Group Quarters",
                          mortgage$conf.int[2],
                          rented$conf.int[2],
                          rent_free$conf.int[2]))
+
+shares <- shares %>%
+  arrange(desc(Share)) %>%
+  mutate(Tenure = factor(Tenure, levels=Tenure))
+
 knitr::kable(shares, caption = "Proportions and 95-percent confidence intervals")
 ```
 
@@ -146,11 +151,7 @@ ggplot(shares, aes(x = Tenure, y = Share, ymin = Low, ymax = High)) +
   geom_bar(stat = "identity") +
   geom_errorbar(width = 0.5) +
   theme_bw() +
-  scale_x_discrete(labels = c("Group Quarters", 
-                            "Owned\nfree and clear", 
-                            "Owned\nwith mortgage",
-                            "Rented",
-                            "Occupied\nrent-free")) +
+  scale_x_discrete() +
   scale_y_continuous(name = "Share of population (error bars represent\n 95-percent confidence interval)",
                      breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5),
                      labels = c("0", "10%", "20%", "30%", "40%", "50%"))

@@ -59,3 +59,7 @@ For each week's assignment, I've posted a written tutorial here. Since R is a sc
 ## Week 3: Relationships
 
 [Written tutorial](https://ses-5215-f2020.github.io/tutorials/Week3)
+
+## Week 4: Regression
+
+[Written tutorial](https://ses-5215-f2020.github.io/tutorials/Week4-calcs-only)
