@@ -1546,7 +1546,7 @@ div.tocify {
   mutate(struct_type = case_when(
     BLD_label==&quot;2 Apartments&quot; ~ &quot;LT_10_apts&quot;,
     BLD_label==&quot;10-19 Apartments&quot; ~ &quot;TenTo49apts&quot;,
-    BLD_label==&quot;One-family house detached&quot; ~ &quot;SFhome&quot;,
+    BLD_label==&quot;One-family house detached&quot; ~ &quot;1SFhome&quot;,
     BLD_label==&quot;3-4 Apartments&quot; ~ &quot;LT_10_apts&quot;,
     BLD_label==&quot;Mobile home or trailer&quot; ~ &quot;MH_veh&quot;,
     BLD_label==&quot;50 or more apartments&quot; ~ &quot;GT_49_apts&quot;,
@@ -1576,25 +1576,24 @@ summary(model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -1870.5  -566.9   -87.9   420.5  3691.1 
+## -1864.8  -567.8   -87.1   422.2  3692.2 
 ## 
 ## Coefficients:
 ##                         Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)            1312.5545    20.9894  62.534  &lt; 2e-16 ***
-## age_struct               -1.4654     0.1027 -14.272  &lt; 2e-16 ***
-## BDSP                    108.9489     3.2639  33.380  &lt; 2e-16 ***
-## struct_typeGT_49_apts    45.5194    17.5084   2.600 0.009329 ** 
-## struct_typeLT_10_apts   -72.5489    16.4861  -4.401 1.08e-05 ***
-## struct_typeMH_veh      -769.7138    29.0388 -26.506  &lt; 2e-16 ***
-## struct_typeSFhome      -144.0617    17.9984  -8.004 1.22e-15 ***
-## struct_typeTenTo49apts  -63.3606    17.3706  -3.648 0.000265 ***
-## engl_profTRUE           117.5494    10.0604  11.684  &lt; 2e-16 ***
+## (Intercept)            1213.4402    16.9564  71.563  &lt; 2e-16 ***
+## age_struct               -1.5063     0.1026 -14.681  &lt; 2e-16 ***
+## BDSP                    107.2148     3.2584  32.904  &lt; 2e-16 ***
+## struct_typeGT_49_apts   151.0618    11.5244  13.108  &lt; 2e-16 ***
+## struct_typeLT_10_apts    34.4811     9.6480   3.574 0.000352 ***
+## struct_typeMH_veh      -663.3654    25.8342 -25.678  &lt; 2e-16 ***
+## struct_typeTenTo49apts   42.7832    11.2255   3.811 0.000138 ***
+## engl_profTRUE           116.0567    10.0639  11.532  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 782.3 on 60503 degrees of freedom
-## Multiple R-squared:  0.03742,    Adjusted R-squared:  0.03729 
-## F-statistic:   294 on 8 and 60503 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 782.7 on 60504 degrees of freedom
+## Multiple R-squared:  0.0364, Adjusted R-squared:  0.03629 
+## F-statistic: 326.5 on 7 and 60504 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div id="interpreting-the-results" class="section level2">
 <h2>Interpreting the results</h2>

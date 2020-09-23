@@ -35,7 +35,7 @@ hh_data <- read_csv("households.csv") %>%
   mutate(struct_type = case_when(
     BLD_label=="2 Apartments" ~ "LT_10_apts",
     BLD_label=="10-19 Apartments" ~ "TenTo49apts",
-    BLD_label=="One-family house detached" ~ "SFhome",
+    BLD_label=="One-family house detached" ~ "1SFhome",
     BLD_label=="3-4 Apartments" ~ "LT_10_apts",
     BLD_label=="Mobile home or trailer" ~ "MH_veh",
     BLD_label=="50 or more apartments" ~ "GT_49_apts",
