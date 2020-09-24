@@ -70,21 +70,21 @@ summary(model)
 
 ## Interpreting the results
 
-Cool! What does all that mean? The first thing we want to look at is the overall **model fit.** For linear regression, a common measure of model fit is the R-squared value. The multiple R-squared value for this model is 0.037, which tells us that this model predicts about 4% of the variation in rental costs of the homes in this dataset. That's not very much, but it would be pretty nuts if you could predict most of the variation in rental costs with just these four variables. In the social sciences, we don't generally expect to come up with really high R-squared values. The best use of a model fit metric is to compare two alternative models (more on that next week).
+Cool! What does all that mean? The first thing we want to look at is the overall **model fit.** For linear regression, a common measure of model fit is the R-squared value. The multiple R-squared value for this model is 0.036, which tells us that this model predicts about 4% of the variation in rental costs of the homes in this dataset. That's not very much, but it would be pretty nuts if you could predict most of the variation in rental costs with just these four variables. In the social sciences, we don't generally expect to come up with really high R-squared values. The best use of a model fit metric is to compare two alternative models (more on that next week).
 
 Next we'll look at the values and significance of the individual model coefficients. We'll start with the values of the coefficients, which we can find in the "Estimate" column. The value in this column tell you how much of a change in the dependent variable you can expect for each unit of change in the independent variable listed in that row of the table.
 
-In the results above, the coefficient estimate for `age_struct` is -1.4654. This tells us that for each additional year in a building's age, the rent for the homes in that building decrease by $1.47, on average, controlling for differences in the number of bedrooms, differences in structure type, and whether the residents are proficient in English.
+In the results above, the coefficient estimate for `age_struct` is -1.5063. This tells us that for each additional year in a building's age, the rent for the homes in that building decrease by $1.51, on average, controlling for differences in the number of bedrooms, differences in structure type, and whether the residents are proficient in English.
 
-The coefficient estimate of `BDSP` is 108.9489. This tells us that each additional bedroom in a home is associated with an average increase in rent of $109, on average, controlling for the other variables in the model.
+The coefficient estimate of `BDSP` is 107.2148. This tells us that each additional bedroom in a home is associated with an average increase in rent of $109, on average, controlling for the other variables in the model.
 
 The coefficients for the individual categories of your categorical variables are all relative to a base case, or a reference category. 
 
-For structure type, everything is compared to a single-family home (you can tell because that's the category that isn't shown in the coefficients table). The coefficient for buildings with more than 49 units is 45.5194. This means that, on average and controlling for everything else in the model, the rent for a home in a building with more than 49 units will be $45.52 more than the rent would be for a single-family home. 
+For structure type, everything is compared to a single-family home (you can tell because that's the category that isn't shown in the coefficients table). The coefficient for buildings with more than 49 units is 151.0618. This means that, on average and controlling for everything else in the model, the rent for a home in a building with more than 49 units will be $151.06 more than the rent would be for a single-family home. 
 
-The coefficient for a mobile home or vehicle is -769.7138, which indicated that the rent for a mobile home would be $769.71 less than for a comparable single-family home.
+The coefficient for a mobile home or vehicle is -663.3654, which indicated that the rent for a mobile home would be $663.37 less than for a comparable single-family home.
 
-The coefficient for English language proficiency is 117.5494, meaning that households in which at least one person over the age of 14 speaks English either exclusively or very well pay an average of $117.55 more in rent than households with limited English proficiency do, controlling for everything else in the model.
+The coefficient for English language proficiency is 116.0567, meaning that households in which at least one person over the age of 14 speaks English either exclusively or very well pay an average of $116.06 more in rent than households with limited English proficiency do, controlling for everything else in the model.
 
 If the coefficients for one of your independent variables were zero, that would mean that it has no relationship with the dependent variable, and the p-value is the probability the coefficient for the full population would actually be zero. If the 95-percent confidence interval for the coeffiency does not include zero, the p-value will be less than 0.05. 
 
