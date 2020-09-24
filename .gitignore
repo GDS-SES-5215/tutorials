@@ -37,3 +37,6 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# parks data
+G_MP08_PARKS_PL.kml
