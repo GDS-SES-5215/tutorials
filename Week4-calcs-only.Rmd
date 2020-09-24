@@ -28,7 +28,7 @@ Again, `read_csv()` loads the data into our environment.
 
 I'm going to recode a couple of variables as well. This is more or less the same thing I did at the start of the [Week 3 tutorial](https://ses-5215-f2020.github.io/tutorials/Week3){target="_blank"}.
 
-I'm favoring short variable names, as well as short names for the values of categorical variables. THat will make your regression output easier to read.
+I'm favoring short variable names, as well as short names for the values of categorical variables. That will make your regression output easier to read.
 
 ```{r load data, results='hide'}
 hh_data <- read_csv("households.csv") %>%

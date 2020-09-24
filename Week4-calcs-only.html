@@ -1541,7 +1541,7 @@ div.tocify {
 <p>Let’s start by loading the household-level dataset we created in week 1.</p>
 <p>Again, <code>read_csv()</code> loads the data into our environment.</p>
 <p>I’m going to recode a couple of variables as well. This is more or less the same thing I did at the start of the <a href="https://ses-5215-f2020.github.io/tutorials/Week3" target="_blank">Week 3 tutorial</a>.</p>
-<p>I’m favoring short variable names, as well as short names for the values of categorical variables. THat will make your regression output easier to read.</p>
+<p>I’m favoring short variable names, as well as short names for the values of categorical variables. That will make your regression output easier to read.</p>
 <pre class="r"><code>hh_data &lt;- read_csv(&quot;households.csv&quot;) %&gt;%
   mutate(struct_type = case_when(
     BLD_label==&quot;2 Apartments&quot; ~ &quot;LT_10_apts&quot;,
