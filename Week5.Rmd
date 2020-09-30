@@ -1,0 +1,204 @@
+---
+title: "Week 4: Regression"
+author: "Carole Voulgaris"
+date: "9/10/2020"
+output: 
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+For this assignment, you'll be using the following libraries, so make sure they're installed ahead of time. I'll be using the tidyverse library to recode my data.
+
+```{r load libraries}
+library(tidyverse)
+library(jtools)
+library(interactions)
+library(knitr)
+```
+
+## Loading the data
+
+Let's start by loading and recoding the person-level dataset I created in Week 1
+
+```{r load data, results='hide'}
+ppl_data <- read_csv("people.csv") %>%
+  mutate(tenure = case_when(
+    TEN_label == "Owned with mortgage or loan (include home equity loans)" ~
+      "1Own",
+    TEN_label == "Owned free and clear" ~ "1Own",
+    TEN_label == "Rented" ~ "Rent",
+    TEN_label == "Occupied without payment of rent" ~ "Rent-free",
+    TEN_label == "N/A (GQ/vacant)" ~ "Group quarters",
+    TRUE ~ "Other")) %>%
+  filter(WKHP > 0, PINCP > 0, JWMNP >0)
+```
+
+## Initial regression model
+
+Here is a linear regression model predicting travel time to work, based on hours worked per week, income, tenure, and sex:
+
+``` {r}
+model1 <- lm(JWMNP ~ WKHP + PINCP + tenure + SEX_label, 
+            data = ppl_data)
+
+summary(model1)
+```
+
+## A log transformation
+
+The difference between earning \$1,000 per year and \$2,000 is probably more substantial than the difference between earning \$50,000 per year and \$51,000 per year. In the former case, income has increased by 100%, and in the latter, income has increased by 2%. When percentage increases are more relevant than absolute increases, that's a clue that a log-transformed version of your variable might be appropriate. Does log-transforming income improve the model fit?
+
+``` {r}
+model2 <- lm(JWMNP ~ WKHP + log(PINCP) + tenure + SEX_label, 
+            data = ppl_data)
+
+summary(model2)
+```
+
+The R-squared value improves, very slightly, from 0.023 to 0.025.
+
+**NOTE:** A one-unit increase in the log of a variable corresponds to doubling that variable. So the way you would interpret the coeffiecnt for log(PINCP) above is that, when a person's income doubles, you would expect their commute to increase by about 1.2 minutes (on average, controlling for the other stuff in the model). This difference is statistically significant, but it may not be practically significant.
+
+## Converting a continuous variable to a categorical variable
+
+Maybe the number of hours worked per week relates to commuting time, but in more a step-wise way than a linear way. Like, maybe everyone who works less than 40 hours per week generally has a pretty short commute; everyone who works exactly 40 hours per week has a slightly longer commute; and everyone who works more than 40 hours per week has a way shorter commute.
+
+If you suspect that something like this is going on, you might want to convert your continuous variable for work time into a categorical variable.
+
+``` {r}
+ppl_data <- ppl_data %>%
+  mutate(work_time = case_when(WKHP == 40 ~ "40 hours",
+                               WKHP < 40 ~ "Short week",
+                               WKHP > 40 ~ "Long week"))
+
+model3 <- lm(JWMNP ~ work_time + log(PINCP) + tenure + SEX_label, 
+            data = ppl_data)
+
+summary(model3)
+```
+
+The model fit is a little worse than when we had a continuous variable for work hours, so let's not do that.
+
+## Adding an interaction term
+
+Does income make a bigger difference in commute distance for men than for women? If we think that the effect of one of our independent variables depends on the value of another variable, then we can capture that effect with an interaction term. 
+
+``` {r}
+
+model4 <- lm(JWMNP ~ WKHP + log(PINCP) + tenure + SEX_label +
+               log(PINCP):SEX_label, 
+            data = ppl_data)
+
+summary(model4)
+```
+
+The positive and statistically significant coefficent for income tells us that people with higher incomes have longer commutes, **but...**
+
+The negative and statistically significant coefficient for the interaction between sex and income tells us that income has less of an effect on commute time for men than it does for women.
+
+## Visualizing the results
+
+I might want to create a graph to compare the R-squared values for all four models.
+
+```{r}
+ModelFit <- tibble(model = c(1, 2, 3, 4),
+                   R_square = c(summary(model1)$adj.r.squared,
+                                summary(model2)$adj.r.squared,
+                                summary(model3)$adj.r.squared,
+                                summary(model4)$adj.r.squared))
+
+ggplot(ModelFit, aes(x = model, y = R_square)) +
+  geom_line() +
+  scale_x_continuous(name = "",
+                   breaks = breaks <- seq(1, 4, by = 1),
+                   labels = paste("Model", breaks)) +
+  scale_y_continuous(name = "Adjusted R-squared value") +
+  theme_bw()
+```
+
+It looks like Model 4 is the best fitting model, although the differences are tiny (notice the range of values on the y-axis). So I'll call Model 4 my preferred model.
+
+I can use the `export_summs()` function to create a nicely-formatted table showing the results of multiple models side-by-side. Note that I'm leaving the intercept out of the table because it doesn't tell us anything interesting.
+
+```{r}
+coeff_names <- c("Weekly work hours" = "WKHP",
+                       "Annual income" = "PINCP",
+                       "Annual income\n(log-transformed)" = 
+                         "log(PINCP)",
+                       "Male\n(compared to female)" = "SEX_labelMale",
+                       "Group quarters\n(compared to owned home)" = 
+                         "tenureGroup quarters",
+                       "Rented home\n(compared to owned home)" = 
+                         "tenureRent",
+                       "Rent-free home\n(compared to owned home)" =
+                         "tenureRent-free",
+                       "Interaction:\nmale and log-transformed income" = 
+                         "log(PINCP):SEX_labelMale")
+
+export_summs(model1, model4, 
+             error_format = "(p = {p.value})",
+             error_pos = "same",
+             model.names = c("Initial model", "Preferred model"),
+             coefs = coeff_names)
+```
+
+## Visualizing regression results
+
+Let's visualize some of the relationships from our preferred model. Here's a chart showing the 95-percent confidence intervals for the coefficents of each of our model coefficients.
+
+```{r}
+plot_coefs(model4, 
+           coefs = rev(coeff_names),
+           plot.distributions = TRUE,
+           rescale.distributions = TRUE)
+```
+
+Here is the predicted relationship between income and commute time, for both men and women, holding all other variables at their means.
+
+```{r, warning=FALSE, message=FALSE}
+interact_plot(model4, pred = PINCP, modx = SEX_label, interval = TRUE) +
+  scale_x_continuous(name = "Annual income (thousands)",
+                     limits = c(0, 500000),
+                     breaks = breaks <- seq(0, 500000, by = 50000),
+                     labels = paste("$", 
+                                    prettyNum(breaks/1000, big.mark = "'"),
+                                    sep = "")) +
+  scale_y_continuous(name = "Travel time to work (minutes)",
+                     breaks = seq(0, 45, by = 5)) +
+  scale_color_discrete(name = "") +
+  scale_linetype_discrete(name = "") +
+  scale_fill_discrete(name = "") 
+```
+
+Here's the relationship between hours worked per week and travel time to work, by sex, and holding all other variables at their means. Note that the lines are parallel because the model didn't include an interaction term between work hours and sex.
+
+```{r, warning=FALSE, message=FALSE}
+interact_plot(model4, pred = WKHP, modx = SEX_label, interval = TRUE) +
+  scale_x_continuous(name = "Hours worked per week") +
+  scale_y_continuous(name = "Travel time to work (minutes)",
+                     breaks = seq(0, 45, by = 5)) +
+  scale_color_discrete(name = "") +
+  scale_linetype_discrete(name = "") +
+  scale_fill_discrete(name = "") 
+```
+
+And here's the relationship between housing tenure and travel time to work, by sex, and holding all other variables at their means. Notice that there is a consistent difference between men and women for all tenure categories because my model does not include an interaction between sex and tenure.
+
+```{r, message = FALSE, warning = FALSE}
+cat_plot(model4, pred = tenure, modx = SEX_label, interval = TRUE) +
+ scale_x_discrete(name = "Housing tenure",
+                    labels = c("Owned home", "Group quarters",
+                               "Rented home", "Rent-free home")) +
+  scale_y_continuous(name = "Travel time to work (minutes)",
+                     breaks = seq(0, 45, by = 5)) +
+  scale_color_discrete(name = "") +
+  scale_linetype_discrete(name = "") +
+  scale_fill_discrete(name = "") 
+```
