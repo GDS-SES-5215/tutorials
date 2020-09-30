@@ -154,10 +154,24 @@ export_summs(model1, model4,
 Let's visualize some of the relationships from our preferred model. Here's a chart showing the 95-percent confidence intervals for the coefficents of each of our model coefficients.
 
 ```{r}
+coeff_desc <- c("Living in a rent-free home\n(compared to an owned home)" =
+                         "tenureRent-free",
+                 "Living in a rented home\n(compared to an owned home)" = 
+                         "tenureRent",
+                 "Living in group quarters\n(compared to an owned home)" = 
+                         "tenureGroup quarters",
+                "Being male AND doubling income " = 
+                         "log(PINCP):SEX_labelMale", 
+                "Being male\n(rather than female)" = "SEX_labelMale",
+                 "Doubling household income" = 
+                         "log(PINCP)",
+                 "Working one additional\nhour per week" = "WKHP")
+
 plot_coefs(model4, 
-           coefs = rev(coeff_names),
+           coefs = coeff_desc,
            plot.distributions = TRUE,
-           rescale.distributions = TRUE)
+           rescale.distributions = TRUE) +
+  scale_x_continuous(name = "Effect on predicted commute time (minutes)")
 ```
 
 Here is the predicted relationship between income and commute time, for both men and women, holding all other variables at their means.
