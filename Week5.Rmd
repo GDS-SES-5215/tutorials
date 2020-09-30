@@ -88,20 +88,25 @@ The model fit is a little worse than when we had a continuous variable for work 
 
 ## Adding an interaction term
 
-Does income make a bigger difference in commute distance for men than for women? If we think that the effect of one of our independent variables depends on the value of another variable, then we can capture that effect with an interaction term. 
+Does income make a bigger difference in commute time for men than for women? Are there sex differences in the effect of housing tenure or work hours on commuting time?
+
+If we think that the effect of one of our independent variables might depend on the value of another variable, then we can capture that effect with an interaction term. 
 
 ``` {r}
 
 model4 <- lm(JWMNP ~ WKHP + log(PINCP) + tenure + SEX_label +
-               log(PINCP):SEX_label, 
+               log(PINCP):SEX_label + tenure:SEX_label +
+               WKHP:SEX_label, 
             data = ppl_data)
 
 summary(model4)
 ```
 
-The positive and statistically significant coefficent for income tells us that people with higher incomes have longer commutes, **but...**
+The positive and statistically significant coefficent for income tells us that people with higher incomes have longer commutes, **but** the negative and statistically significant coefficient for the interaction between sex and income tells us that income has less of an effect on commute time for men than it does for women.
 
-The negative and statistically significant coefficient for the interaction between sex and income tells us that income has less of an effect on commute time for men than it does for women.
+Likewise, the negative and statistically significant coefficients for all housing tenure categories tell us that people who own their homes (the reference/base/omitted category) have longer commutes than people who don't, **and** the negative and statistically significant coefficient for the interaction between sex and each tenure category tells us that the differences by housing tenure are even greater for men than for women.
+
+Finally, the positive and statistically significant coefficient for work hours tells us that people who work longer hours have longer commutes, **and** the positive and statistically significant coefficient for the interaction between sex and each work hours this effect is stronger for men than for women.
 
 ## Visualizing the results
 
@@ -129,18 +134,26 @@ I can use the `export_summs()` function to create a nicely-formatted table showi
 
 ```{r}
 coeff_names <- c("Weekly work hours" = "WKHP",
-                       "Annual income" = "PINCP",
-                       "Annual income\n(log-transformed)" = 
-                         "log(PINCP)",
-                       "Male\n(compared to female)" = "SEX_labelMale",
-                       "Group quarters\n(compared to owned home)" = 
-                         "tenureGroup quarters",
-                       "Rented home\n(compared to owned home)" = 
-                         "tenureRent",
-                       "Rent-free home\n(compared to owned home)" =
-                         "tenureRent-free",
-                       "Interaction:\nmale and log-transformed income" = 
-                         "log(PINCP):SEX_labelMale")
+                 "Annual income" = "PINCP",
+                 "Annual income\n(log-transformed)" = 
+                   "log(PINCP)",
+                 "Male\n(compared to female)" = "SEX_labelMale",
+                 "Group quarters\n(compared to owned home)" = 
+                   "tenureGroup quarters",
+                 "Rented home\n(compared to owned home)" = 
+                   "tenureRent",
+                 "Rent-free home\n(compared to owned home)" =
+                   "tenureRent-free",
+                 "Interaction:\nmale and log-transformed income" = 
+                    "log(PINCP):SEX_labelMale",
+                 "Interaction:\nmale and work hours" = 
+                    "WKHP:SEX_labelMale",
+                 "Interaction:\nmale and group quarters" = 
+                    "tenureGroup quarters:SEX_labelMale",
+                 "Interaction:\nmale and group quarters" = 
+                    "tenureRent:SEX_labelMale",
+                 "Interaction:\nmale and group quarters" = 
+                    "tenureRent-free:SEX_labelMale")
 
 export_summs(model1, model4, 
              error_format = "(p = {p.value})",
@@ -154,18 +167,26 @@ export_summs(model1, model4,
 Let's visualize some of the relationships from our preferred model. Here's a chart showing the 95-percent confidence intervals for the coefficents of each of our model coefficients.
 
 ```{r}
-coeff_desc <- c("Living in a rent-free home\n(compared to an owned home)" =
+coeff_desc <- c("Being male AND living in a rent-free home" =
+                         "tenureRent-free:SEX_labelMale",
+                 "Being male AND living in a rented home" = 
+                         "tenureRent:SEX_labelMale",
+                 "Being male AND living in group quarters" = 
+                         "tenureGroup quarters:SEX_labelMale",
+                "Living in a rent-free home\n(compared to an owned home)" =
                          "tenureRent-free",
                  "Living in a rented home\n(compared to an owned home)" = 
                          "tenureRent",
                  "Living in group quarters\n(compared to an owned home)" = 
                          "tenureGroup quarters",
-                "Being male AND doubling income " = 
+                "Being male AND doubling income" = 
                          "log(PINCP):SEX_labelMale", 
-                "Being male\n(rather than female)" = "SEX_labelMale",
                  "Doubling household income" = 
                          "log(PINCP)",
-                 "Working one additional\nhour per week" = "WKHP")
+                "Being male AND working an additional hour" = 
+                         "WKHP:SEX_labelMale", 
+                 "Working one additional\nhour per week" = "WKHP",
+                "Being male\n(rather than female)" = "SEX_labelMale")
 
 plot_coefs(model4, 
            coefs = coeff_desc,
