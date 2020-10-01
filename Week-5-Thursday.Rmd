@@ -62,7 +62,8 @@ effect_plot(model1, pred = income_k, interval = TRUE) +
                                     prettyNum(breaks, big.mark = "'"),
                                     sep = "")) +
   scale_y_continuous(name = "Travel time to work (minutes)",
-                     breaks = seq(0, 45, by = 5)) +
+                     breaks = seq(20, 30, by = 1),
+                     limit = c(20,30)) +
   scale_color_discrete(name = "") +
   scale_linetype_discrete(name = "") +
   scale_fill_discrete(name = "") 
@@ -79,7 +80,8 @@ effect_plot(model2, pred = income_k, interval = TRUE) +
                                     prettyNum(breaks, big.mark = "'"),
                                     sep = "")) +
   scale_y_continuous(name = "Travel time to work (minutes)",
-                     breaks = seq(0, 45, by = 5)) +
+                     breaks = seq(20, 30, by = 1),
+                     limit = c(20,30)) +
   scale_color_discrete(name = "") +
   scale_linetype_discrete(name = "") +
   scale_fill_discrete(name = "") 
@@ -98,7 +100,8 @@ effect_plot(model2, pred = income_k, interval = TRUE) +
                                     sep = ""),
                      trans = "log") +
   scale_y_continuous(name = "Travel time to work (minutes)",
-                     breaks = seq(0, 45, by = 5)) +
+                     breaks = seq(20, 30, by = 1),
+                     limit = c(20,30)) +
   scale_color_discrete(name = "") +
   scale_linetype_discrete(name = "") +
   scale_fill_discrete(name = "") 
